@@ -1,16 +1,28 @@
 export async function GET() {
   try {
-    console.log("req got")
+    console.log("API request received");
+
     const res = await fetch("https://fakestoreapi.com/products", {
-      next: { revalidate: 60 }, 
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store", // important for Vercel
     });
+
+    if (!res.ok) {
+      throw new Error("External API failed");
+    }
+
     const data = await res.json();
-    console.log(data);
+
     return Response.json(data);
+
   } catch (error) {
-    console.log(error);
+    console.error("API error:", error);
+
     return Response.json(
-      { message: "Error fetching products" },
+      { error: "Failed to fetch products" },
       { status: 500 }
     );
   }
