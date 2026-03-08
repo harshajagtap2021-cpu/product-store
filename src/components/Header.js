@@ -43,7 +43,7 @@ export default function Header() {
       <p className="dropdown-title">Wishlist Items</p>
 
       {wishlist.length === 0 ? (
-        <p>Your wishlist is empty</p>
+        <p className="cart-empty-msg">Your wishlist is empty. Add some products to get started!</p>
       ) : (
         wishlist.map((item, index) => (
   <div key={`${item.id}-${index}`} className="cart-item">
@@ -90,11 +90,10 @@ export default function Header() {
                 <p className="dropdown-title">Cart Items</p>
 
                 {cartItems.length === 0 ? (
-                  <p>Your cart is empty</p>
+                  <p className="cart-empty-msg">Your cart is empty. Add some products to get started!</p>
                 ) : (
-                  cartItems.map((item, index) => (
-  <div key={`${item.id}-${index}`} className="cart-item">
-
+                  cartItems.map((item) => (
+                    <div key={item.id} className="cart-item">
                       <img
                         src={item.image}
                         alt={item.title}
@@ -103,16 +102,16 @@ export default function Header() {
 
                       <div className="cart-info">
                         <p>{item.title}</p>
-                        <span>${item.price}</span>
+                        <span>${item.price}{item.quantity > 1 ? ` × ${item.quantity}` : ""}</span>
                       </div>
 
                       <button
                         className="remove-btn"
                         onClick={() => removeFromCart(item.id)}
+                        aria-label="Remove from cart"
                       >
-                        ❌
+                        ✕
                       </button>
-
                     </div>
                   ))
                 )}
