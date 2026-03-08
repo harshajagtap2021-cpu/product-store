@@ -6,26 +6,33 @@ const WishlistCtx = createContext();
 
 export function WishlistProvider({ children }) {
 
-  const [wishlist, setWishlist] = useState(new Set());
+  const [wishlist, setWishlist] = useState([]);
 
-  // Load from localStorage
+  // Load wishlist from localStorage
   useEffect(() => {
     const stored = localStorage.getItem("wishlist");
     if (stored) {
-      setWishlist(new Set(JSON.parse(stored)));
+      setWishlist(JSON.parse(stored));
     }
   }, []);
 
-  // Save to localStorage
+  // Save wishlist to localStorage
   useEffect(() => {
-    localStorage.setItem("wishlist", JSON.stringify([...wishlist]));
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
 
-  const toggle = (id) => {
+  // Add or Remove product
+  const toggle = (product) => {
     setWishlist((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
+      const exists = prev.find((item) => item.id === product.id);
+
+      if (exists) {
+        // remove product
+        return prev.filter((item) => item.id !== product.id);
+      } else {
+        // add product
+        return [...prev, product];
+      }
     });
   };
 

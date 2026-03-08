@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 
-export default function ProductList({ searchQuery }) {
+export default function ProductList() {
 
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState("All");
@@ -11,6 +11,7 @@ export default function ProductList({ searchQuery }) {
 
   const [priceFilter, setPriceFilter] = useState("all");
   const [ratingFilter, setRatingFilter] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetch("/api/fakeStore")
@@ -18,7 +19,7 @@ export default function ProductList({ searchQuery }) {
       .then(data => setProducts(data));
   }, []);
 
-  // get unique categories
+  // categories
   const categories = ["All", ...new Set(products.map(p => p.category))];
 
   let filtered = [...products];
@@ -53,7 +54,7 @@ export default function ProductList({ searchQuery }) {
     filtered = filtered.filter(p => p.rating.rate >= ratingFilter);
   }
 
-  // sort products
+  // sorting
   if (sortBy === "price-low") {
     filtered.sort((a, b) => a.price - b.price);
   }
@@ -68,13 +69,6 @@ export default function ProductList({ searchQuery }) {
 
   if (sortBy === "name") {
     filtered.sort((a, b) => a.title.localeCompare(b.title));
-  }
-
-  // clear filters
-  function clearFilters() {
-    setCategory("All");
-    setPriceFilter("all");
-    setRatingFilter(0);
   }
 
   return (
@@ -95,35 +89,65 @@ export default function ProductList({ searchQuery }) {
           </button>
         ))}
 
-        <h4>Price 💰</h4>
+        <h3>Price</h3>
 
-        <button onClick={() => setPriceFilter("0-50")}>
+        <button
+          className={`cat-btn ${priceFilter === "all" ? "active" : ""}`}
+          onClick={() => setPriceFilter("all")}
+        >
+          All
+        </button>
+
+        <button
+          className={`cat-btn ${priceFilter === "0-50" ? "active" : ""}`}
+          onClick={() => setPriceFilter("0-50")}
+        >
           $0 - $50
         </button>
 
-        <button onClick={() => setPriceFilter("50-100")}>
+        <button
+          className={`cat-btn ${priceFilter === "50-100" ? "active" : ""}`}
+          onClick={() => setPriceFilter("50-100")}
+        >
           $50 - $100
         </button>
 
-        <button onClick={() => setPriceFilter("100+")}>
+        <button
+          className={`cat-btn ${priceFilter === "100+" ? "active" : ""}`}
+          onClick={() => setPriceFilter("100+")}
+        >
           $100+
         </button>
 
-        <h4>Rating ⭐</h4>
+        <h3>Rating</h3>
 
-        <button onClick={() => setRatingFilter(4)}>
+        <button
+          className={`cat-btn ${ratingFilter === 0 ? "active" : ""}`}
+          onClick={() => setRatingFilter(0)}
+        >
+          All
+        </button>
+
+        <button
+          className={`cat-btn ${ratingFilter === 4 ? "active" : ""}`}
+          onClick={() => setRatingFilter(4)}
+        >
           ⭐ 4 & up
         </button>
 
-        <button onClick={() => setRatingFilter(3)}>
+        <button
+          className={`cat-btn ${ratingFilter === 3 ? "active" : ""}`}
+          onClick={() => setRatingFilter(3)}
+        >
           ⭐ 3 & up
         </button>
 
-        <button onClick={() => setRatingFilter(2)}>
+        <button
+          className={`cat-btn ${ratingFilter === 2 ? "active" : ""}`}
+          onClick={() => setRatingFilter(2)}
+        >
           ⭐ 2 & up
         </button>
-
-      
 
       </aside>
 
@@ -135,9 +159,24 @@ export default function ProductList({ searchQuery }) {
         <div className="shop-toolbar">
 
           <span>{filtered.length} Products</span>
- <span className="product-tagline">
-    Discover the best deals today ✨
-  </span>
+
+          {/* Search */}
+          <div className="search-box">
+
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+              spellCheck="false"
+            />
+
+            <span className="search-icon">🔍</span>
+
+          </div>
+
+          {/* Sort */}
           <div>
             <label>Sort by: </label>
 
@@ -161,9 +200,13 @@ export default function ProductList({ searchQuery }) {
         {/* Products */}
         <div className="product-grid">
 
-          {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {filtered.length > 0 ? (
+            filtered.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))
+          ) : (
+            <p>No products found 🔍</p>
+          )}
 
         </div>
 

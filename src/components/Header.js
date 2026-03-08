@@ -1,20 +1,18 @@
 "use client";
-import Link from "next/link";
+
 import { useState } from "react";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
 
-export default function Header({ onSearch }) {
-  const [searchText, setSearchText] = useState("");
+export default function Header() {
 
-  const { wishlist } = useWishlist();
-  const { cartCount } = useCart();
+  const { wishlist, toggle } = useWishlist();
+  const { cartItems, cartCount, removeFromCart } = useCart();
 
-  function handleSearch(e) {
-    const value = e.target.value;
-    setSearchText(value);
-    onSearch(value);
-  }
+  const [showWishlist, setShowWishlist] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+
 
   return (
     <header className="header">
@@ -24,22 +22,139 @@ export default function Header({ onSearch }) {
           Shop<span>Zone</span>
         </a>
 
-        {/* Search Box */}
-        <div className="search-box">
-          
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={searchText}
-            onChange={handleSearch}
-            className="search-input"
-          /><span className="search-icon">🔍</span>
-        </div>
+        <span className="product-tagline">
+          Discover the best deals today ✨
+        </span>
 
         <div className="header-actions">
-          <button className="icon-btn">🤍 {wishlist.size}</button>
-          <button className="icon-btn">🛒 {cartCount}</button>
-          <button className="icon-btn">👤</button>
+
+          {/* Wishlist */}
+<div
+  className="icon-wrapper"
+  onMouseEnter={() => setShowWishlist(true)}
+  onMouseLeave={() => setShowWishlist(false)}
+>
+  <button className="icon-btn">
+    🤍 {wishlist.length}
+  </button>
+
+  {showWishlist && (
+    <div className="dropdown-box">
+      <p className="dropdown-title">Wishlist Items</p>
+
+      {wishlist.length === 0 ? (
+        <p>Your wishlist is empty</p>
+      ) : (
+        wishlist.map((item, index) => (
+  <div key={`${item.id}-${index}`} className="cart-item">
+
+            <img
+              src={item.image}
+              alt={item.title}
+              className="cart-img"
+            />
+
+            <div className="cart-info">
+              <p>{item.title}</p>
+              <span>${item.price}</span>
+            </div>
+
+            <button
+              className="remove-btn"
+              onClick={() => toggle(item)}
+            >
+              ❌
+            </button>
+
+          </div>
+        ))
+      )}
+
+    </div>
+  )}
+</div>
+
+
+          {/* Cart */}
+          <div
+            className="icon-wrapper"
+            onMouseEnter={() => setShowCart(true)}
+            onMouseLeave={() => setShowCart(false)}
+          >
+            <button className="icon-btn">
+              🛒 {cartCount}
+            </button>
+
+            {showCart && (
+              <div className="dropdown-box">
+                <p className="dropdown-title">Cart Items</p>
+
+                {cartItems.length === 0 ? (
+                  <p>Your cart is empty</p>
+                ) : (
+                  cartItems.map((item, index) => (
+  <div key={`${item.id}-${index}`} className="cart-item">
+
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="cart-img"
+                      />
+
+                      <div className="cart-info">
+                        <p>{item.title}</p>
+                        <span>${item.price}</span>
+                      </div>
+
+                      <button
+                        className="remove-btn"
+                        onClick={() => removeFromCart(item.id)}
+                      >
+                        ❌
+                      </button>
+
+                    </div>
+                  ))
+                )}
+
+              </div>
+            )}
+          </div>
+
+
+          {/* Profile */}
+          <div
+            className="icon-wrapper"
+            onMouseEnter={() => setShowProfile(true)}
+            onMouseLeave={() => setShowProfile(false)}
+          >
+            <button className="icon-btn">👤</button>
+
+            {showProfile && (
+              <div className="dropdown-box">
+
+                <p className="profile-title">
+                  Hello User
+                </p>
+
+                <p className="profile-subtitle">
+                  To access your ShopZone account
+                </p>
+
+                <button className="signup-btn">
+                  Sign Up
+                </button>
+
+                <hr />
+
+                <p className="dropdown-item">My Orders</p>
+                <p className="dropdown-item">Delete Account</p>
+
+              </div>
+            )}
+
+          </div>
+
         </div>
 
       </div>
