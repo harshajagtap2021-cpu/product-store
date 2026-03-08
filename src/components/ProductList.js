@@ -13,15 +13,14 @@ export default function ProductList() {
   const [ratingFilter, setRatingFilter] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-  fetch("/api/fakeStore")
+ // ProductList.js
+useEffect(() => {
+  fetch("https://fakestoreapi.com/products")
     .then(res => res.json())
     .then(data => {
-      if (Array.isArray(data)) {
-        console.log("data=", data)
-        setProducts(data);
-      } else {
-        console.error("API returned error:", data);
+      if (Array.isArray(data)) setProducts(data);
+      else {
+        console.error("External API returned non-array:", data);
         setProducts([]);
       }
     })
