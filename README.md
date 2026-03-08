@@ -2,6 +2,23 @@
 
 This project is a responsive single-page application built using Next.js.
 
+## Live Demo
+
+🚀 **[View Live Demo on Vercel](https://product-store-psi-one.vercel.app/)**
+
+## Getting Started
+
+1. Clone the repository:
+   https://github.com/harshajagtap2021-cpu/product-store.git
+
+2. Install dependencies:
+   npm install
+
+3. Run the development server:
+   npm run dev
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
 ## Features
 - Fetch products from FakeStore API
 - Display product image, title and price
@@ -17,7 +34,10 @@ This project is a responsive single-page application built using Next.js.
 https://fakestoreapi.com/products
 
 ## Tech Stack
-Next.js, HTML, CSS, JavaScript
+Next.js, HTML, CSS
+
+## Repository
+[GitHub Repository](https://github.com/harshajagtap2021-cpu/product-store)  
 
 ## Keyword
 TNIT2026
