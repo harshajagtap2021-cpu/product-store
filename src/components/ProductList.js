@@ -12,6 +12,7 @@ export default function ProductList() {
   const [priceFilter, setPriceFilter] = useState("all");
   const [ratingFilter, setRatingFilter] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
  // ProductList.js
 useEffect(() => {
@@ -85,10 +86,20 @@ useEffect(() => {
   return (
     <div className="shop-layout">
 
-      {/* Sidebar */}
-      <aside className="sidebar">
+      {/* Overlay for mobile — closes sidebar when tapped */}
+      {sidebarOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
+      {/* Sidebar */}
+      <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+        <div className="sidebar-header">
         <h3>Categories</h3>
+        </div>
 
         {categories.map((cat) => (
           <button
@@ -168,43 +179,44 @@ useEffect(() => {
 
         {/* Toolbar */}
         <div className="shop-toolbar">
-
-          <span>{filtered.length} Products</span>
-
-          {/* Search */}
-          <div className="search-box">
-
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
-              spellCheck="false"
-            />
-
-            <span className="search-icon">🔍</span>
-
+          <div className="toolbar-row-1">
+            <div className="search-box">
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+                spellCheck="false"
+              />
+              <span className="search-icon">🔍</span>
+            </div>
+            <span className="result-count">{filtered.length} Products</span>
           </div>
-
-          {/* Sort */}
-          <div>
-            <label>Sort by: </label>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="sort-select"
+          <div className="toolbar-row-2">
+            <button
+              type="button"
+              className="filter-toggle-btn"
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Open filters"
             >
-              <option value="default">Featured</option>
-              <option value="price-low">Price: Low → High</option>
-              <option value="price-high">Price: High → Low</option>
-              <option value="rating">Rating</option>
-              <option value="name">Name A → Z</option>
-            </select>
-
+              ☰ Filters
+            </button>
+            <div className="sort-wrap">
+              <label className="sort-label">Sort by:</label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="sort-select"
+              >
+                <option value="default">Featured</option>
+                <option value="price-low">Price: Low → High</option>
+                <option value="price-high">Price: High → Low</option>
+                <option value="rating">Rating</option>
+                <option value="name">Name A → Z</option>
+              </select>
+            </div>
           </div>
-
         </div>
 
 
