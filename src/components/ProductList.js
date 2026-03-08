@@ -14,13 +14,25 @@ export default function ProductList() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    fetch("/api/fakeStore")
-      .then(res => res.json())
-      .then(data => setProducts(data));
-  }, []);
+  fetch("/api/fakeStore")
+    .then(res => res.json())
+    .then(data => {
+      if (Array.isArray(data)) {
+        console.log("data=", data)
+        setProducts(data);
+      } else {
+        console.error("API returned error:", data);
+        setProducts([]);
+      }
+    })
+    .catch(err => {
+      console.error("Fetch error:", err);
+      setProducts([]);
+    });
+}, []);
 
   // categories
-  const categories = ["All", ...new Set(products.map(p => p.category))];
+  const categories = ["All", ...new Set((products || []).map(p => p.category))];
 
   let filtered = [...products];
 
