@@ -7,9 +7,10 @@ import { useState } from "react";
 export default function ProductCard({ product }) {
 
   const { toggle, wishlist } = useWishlist();
-  const { addToCart } = useCart();
+  const { addToCart, cartItems } = useCart();
 
- const liked = wishlist.some((item) => item.id === product.id);
+  const liked = wishlist.some((item) => item.id === product.id);
+  const cartQuantity = cartItems.find((item) => item.id === product.id)?.quantity ?? 0;
   const stars = Math.round(product.rating?.rate || 0);
 
   const [message, setMessage] = useState("");
@@ -88,18 +89,15 @@ export default function ProductCard({ product }) {
       <div className="card-footer">
 
         <button
-          className="card-btn"
+          className={`card-btn ${message && type === "cart" ? "card-btn-success" : cartQuantity > 0 ? "in-cart" : ""}`}
           onClick={handleAddCart}
         >
-          Add to Cart
+          {message && type === "cart"
+            ? message
+            : cartQuantity > 0
+              ? `${cartQuantity} in Cart`
+              : "Add to Cart"}
         </button>
-
-        {/* Cart message on right side */}
-        {message && type === "cart" && (
-          <span className="cart-msg">
-            {message}
-          </span>
-        )}
 
       </div>
 
